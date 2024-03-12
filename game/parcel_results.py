@@ -3,6 +3,7 @@ from . import screen
 import time
 from rich.console import Console
 from rich.table import Table
+from rich import print
 from . import parcel_delivery
 
 
@@ -40,13 +41,14 @@ def show_end_screen(player_list: list[dict]) -> None:
             str(i + 1) + ".",
             player_list[i]['name'],
             str(player_list[i]['score']),
-            str(player_list[i]['co2'])
+            str(int(player_list[i]['co2'])) + " g"
         )
 
         # Print the created rows
         console.print(score_table)
 
-    input('Paina ENTER jatkaaksesi: ')
+    print("Paina [green]ENTER[/green] siirtyäksesi eteenpäin.")
+    input()
 
     # Call main menu function here
 

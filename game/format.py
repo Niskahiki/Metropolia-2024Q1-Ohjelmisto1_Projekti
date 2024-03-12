@@ -13,13 +13,16 @@ heft_classes = {1:(0.1,1), 2:(1,3), 3:(3,10)}
 
 # Transport method speeds (1: km/h, ... rest are multiples of 1)
 transport_speed1 = 800
-transport_speed2 = 0.75
-transport_speed3 = 1.50
+transport_speed2 = 0.50
+transport_speed3 = 2.0
 
 transport1_co2 = 0.75
 transport2_co2 = 1
-transport3_co2 = 1.5
+transport3_co2 = 2.0
 
-parcel_selection_time_limit = 30
-parcel_delivery_time_limit = 120
+parcel_selection_time_limit = 150
+actual_parcel_delivery_time_limit = 80
+
+
+parcel_delivery_time_limit = 90
 

@@ -44,10 +44,28 @@ def list_print(game_parcel_list, options_list):
     print(f"[#6A5ACD]//[/#6A5ACD] [italic #FF7F50][PAKETIN VALINTA][/italic #FF7F50]\n")    
     print("[#C39BD3]// Valitse seuraavasta kymmenestä vaihtoehdosta viisi:[/#C39BD3]")
     for item in game_parcel_list:
+        item_info = item.get('info')
+
+        j = 106
+        while True:
+            if j >= len(item_info):
+                break
+            elif item_info[j] == " ":
+                break
+            j += 1
+        item_info_part_1 = item_info[:j]
+        item_info_part_2 = item_info[j+1:]
+
         if str(i) in options_list:
-            print(f"[#C39BD3]•[/#C39BD3] [[yellow]{i}[/yellow]]: {item.get('item')}: {item.get('info')}. Paino: {item.get('heft')} kg.")
+            print(f"[#C39BD3]•[/#C39BD3] [[yellow]{i}[/yellow]]: [bright_yellow]{item.get('item')}[/bright_yellow]: [bright_blue]{item.get('heft')}kg[/bright_blue]")
+            print(f"\t[italic dark_green]{item_info_part_1}[/italic dark_green]")
+            if len(item_info_part_2) > 0:
+                print(f"\t[italic dark_green]{item_info_part_2}[/italic dark_green]")
         else:
-            print(f"[#C39BD3]•[/#C39BD3] [[green]x[/green]]: {item.get('item')}: {item.get('info')}. Paino: {item.get('heft')} kg.")
+            print(f"[#C39BD3]•[/#C39BD3] [[bright_black]x[/bright_black]]: [strike bright_black]{item.get('item')}: {item.get('heft')}kg[/strike bright_black]")
+            print(f"\t[italic strike #014201]{item_info_part_1}[/italic strike #014201]")
+            if len(item_info_part_2) > 0:
+                print(f"\t[italic strike #014201]{item_info_part_2}[/italic strike #014201]")
         i += 1
 
 
@@ -72,12 +90,12 @@ def list_select(game_parcel_list):
             player_parcel_list.append(game_parcel_list[int(option) - 1])
             options_list.remove(option)
             i += 1
-            if i == 6:
-                print(">> Kaikki paketit valittu!")
-                time.sleep(1.5)
-                break
             screen.feedback("time",parcel_delivery.how_much_time_is_left(start_time, format.parcel_selection_time_limit))
             list_print(game_parcel_list, options_list)
+            if i == 6:
+                print(f"[bold bright_green]>> Kaikki paketit valittu![/bold bright_green]")
+                time.sleep(2)
+                break
             option = input(">> ")
         elif option in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]:
             screen.new()
@@ -89,67 +107,8 @@ def list_select(game_parcel_list):
             screen.feedback(option, "error")
             list_print(game_parcel_list, options_list)
             option = input(">> ")
+        if i == 6:
+            print(f"[bold bright_green]>> Kaikki paketit valittu![/bold bright_green]")
+            time.sleep(2)
+            break
     return player_parcel_list
-
-
-
-## TEST DATA
-test_parcels = [
-("vasara",200,3,"Vasara on hieno vasara"),
-("omena",300,1,"Omena on hieno omena"),
-("tietokone",150,2,"tietoinen kone"),
-("possu",175,1,"röh röh"),
-("kaakao",500,2,"makeaa"),
-("vaahtokarkki",1000,1,"kelluvaa"),
-("takki",10,3,"lämmittää kivasti"),
-("karkki",454,3,"aiai mun hampaat"),
-("sitruuna",343,1,"kirpiää"),
-("appelsiini",643,2,"appelsiini on hieno appelsiini")
-]
-
-test_airports = [
-("Aavahelukka Airport","Suomi", 67.60359954833984,23.97170066833496),
-("Ahmosuo Airport","Suomi",64.895302,25.752199),
-("Alavus Airfield","Suomi",62.554699,23.573299),
-("Jorvin Hospital Heliport","Suomi",60.220833,24.68639),
-("Kilpisjärvi Heliport","Suomi",69.0022201538086,20.89638900756836),
-("Enontekio Airport","Suomi",68.362602233887,23.424299240112),
-("Eura Airport","Suomi",61.1161,22.201401),
-("Forssa Airfield","Suomi",60.803683,23.650802),
-("Genböle Airport","Suomi",60.086899,22.5219),
-("Halli Airport","Suomi",61.856039,24.786686)
-]
-
-game_parcel_list = [{'item': 'vasara', 'co2_item': 200, 'heft': 8.19, 'info': 'Vasara on hieno '
-                    'vasara', 'destination_airport': 'Aavahelukka Airport', 'destination_country':
-    'Suomi', 'latitude': 67.60359954833984, 'longitude': 23.97170066833496}, {'item': 'omena',
-    'co2_item': 300, 'heft': 0.35, 'info': 'Omena on hieno omena',
-    'destination_airport': 'Ahmosuo Airport', 'destination_country': 'Suomi', 'latitude': 64.895302,
-    'longitude': 25.752199}, {'item': 'tietokone', 'co2_item': 150, 'heft': 2.7,
-    'info': 'tietoinen kone', 'destination_airport': 'Alavus Airfield', 'destination_country': 'Suomi',
-    'latitude': 62.554699, 'longitude': 23.573299}, {'item': 'possu', 'co2_item': 175, 'heft': 0.76,
-    'info': 'röh röh', 'destination_airport': 'Jorvin Hospital Heliport', 'destination_country': 'Suomi',
-    'latitude': 60.220833, 'longitude': 24.68639}, {'item': 'kaakao', 'co2_item': 500, 'heft': 2.78,
-    'info': 'makeaa', 'destination_airport': 'Kilpisjärvi Heliport', 'destination_country': 'Suomi',
-    'latitude': 69.0022201538086, 'longitude': 20.89638900756836}, {'item': 'vaahtokarkki',
-    'co2_item': 1000, 'heft': 0.58, 'info': 'kelluvaa', 'destination_airport': 'Enontekio Airport',
-    'destination_country': 'Suomi', 'latitude': 68.362602233887, 'longitude': 23.424299240112},
-    {'item': 'takki', 'co2_item': 10, 'heft': 6.74, 'info': 'lämmittää kivasti',
-     'destination_airport': 'Eura Airport', 'destination_country': 'Suomi', 'latitude': 61.1161,
-     'longitude': 22.201401}, {'item': 'karkki', 'co2_item': 454, 'heft': 3.87, 'info': 'aiai mun hampaat',
-    'destination_airport': 'Forssa Airfield', 'destination_country': 'Suomi', 'latitude': 60.803683,
-    'longitude': 23.650802}, {'item': 'sitruuna', 'co2_item': 343, 'heft': 0.51, 'info': 'kirpiää',
-    'destination_airport': 'Genböle Airport', 'destination_country': 'Suomi', 'latitude': 60.086899,
-    'longitude': 22.5219}, {'item': 'appelsiini', 'co2_item': 643, 'heft': 2.91,
-    'info': 'appelsiini on hieno appelsiini', 'destination_airport': 'Halli Airport',
-    'destination_country': 'Suomi', 'latitude': 61.856039, 'longitude': 24.786686}]
-
-# antaa pelaajalle generoidusta pakettilistasta 10 vaitoehtoa, joista pelaaja valitsee 5
-#import parcel_selector
-
-# testilista
-
-
-# siirtää parcel_compiler funktion avulla databasesta arvotut paketit ja
-# lentokentät käytettäväksi listaksi
-#game_parcel_list = parcel_selector.parcel_compiler(game_parcel_list, Noelin_airport_list)
