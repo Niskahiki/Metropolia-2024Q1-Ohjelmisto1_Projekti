@@ -28,11 +28,30 @@ def select_delivery(player_data):
         for parcel in player_data.get("parcels_picked"):
             parcel_number = f"[yellow]{player_data.get('parcels_picked').index(parcel)+1}[/yellow]"
             if parcel in player_data.get("parcels_delivered"):
-                parcel_number = "[green]X[/green]"
+                parcel_number = "[bright_black]X[/bright_black]"
 
             distance_from_player = distance.distance(player_data.get("location"), (parcel.get("latitude"), parcel.get("longitude")))
-            print(f"[#C39BD3]•[/#C39BD3] [{parcel_number}]: Tuote: {parcel.get('item')}, Paino: {parcel.get('heft')} kg, Kohde: {parcel.get('destination_airport')}, Etäisyys: {float(str(distance_from_player)[:-3]):.2f} km")
-        
+            dot_and_number = f"[#C39BD3]•[/#C39BD3] [{parcel_number}]:"
+            tuote = f"Tuote: [bright_yellow]{parcel.get('item')}[/bright_yellow],"
+            paino = f"Paino: [bright_blue]{parcel.get('heft')} kg[/bright_blue],"
+            kohde = f"Kohde: [bright_green]{parcel.get('destination_airport')}[/bright_green],"
+            etaisuus = f"Etäisyys: [bright_red]{float(str(distance_from_player)[:-3]):.2f} km[/bright_red]"
+
+            longest_name_length = 0
+            for parcel1 in player_data["parcels_picked"]:
+                if len(parcel1["item"]) > longest_name_length:
+                    longest_name_length = len(parcel1["item"])
+
+            longest_destination_name_length = 0
+            for parcel1 in player_data["parcels_picked"]:
+                if len(parcel1["destination_airport"]) > longest_destination_name_length:
+                    longest_destination_name_length = len(parcel1["destination_airport"])
+
+            if parcel not in player_data.get("parcels_delivered"):
+                print(f"{dot_and_number} {tuote:<{longest_name_length+39}} {paino:<42} {kohde:<{longest_destination_name_length+37}} {etaisuus}")
+            else:
+                print(f"• [strike bright_black][{parcel_number}]: Tuote: { parcel.get('item') + ',' :<{longest_name_length + 1} } Paino: { str(parcel.get('heft')) + ' kg,' :<8 } Kohde: { parcel.get('destination_airport') }")
+
         option = input(">> ")
 
         if option in list_of_valid_inputs:
@@ -68,11 +87,18 @@ def select_delivery_method(chosen_location, player_data, start_time):
     #asks the player to choose an airplane and doesn't let them proceed until a valid input is given
     while True:
         print(f"[#6A5ACD]//[/#6A5ACD] [italic #FF7F50][PAKETIN KULJETUS / TOIMITUSTAPA][/italic #FF7F50]")
-        print(f"[#6A5ACD]•[/#6A5ACD]Kohteena: [#76D7C4]{player_data.get('parcels_picked')[int(chosen_location)].get('destination_airport')}[/#76D7C4], etäisyys: {float(str(distance_from_player)[:-3]):.0f} km\n")
+        if player_data["location"] == [60.3172, 24.963301]:
+            print(f"[#6A5ACD]•[/#6A5ACD]Sijaintisi: [#76D7C4]Helsinki-Vantaan lentoasema[/#76D7C4]")
+        else:
+            for parcel in player_data["parcels_picked"]:
+                if parcel["latitude"] == player_data["location"][0] and parcel["longitude"] == player_data["location"][1]:
+                    location = parcel["destination_airport"]
+            print(f"[#6A5ACD]•[/#6A5ACD]Sijaintisi: [#76D7C4]{location}[/#76D7C4]")
+        print(f"[#6A5ACD]•[/#6A5ACD]Kohteena:   [#76D7C4]{player_data.get('parcels_picked')[int(chosen_location)].get('destination_airport')}[/#76D7C4], etäisyys: [bright_red]{float(str(distance_from_player)[:-3]):.0f} km[/bright_red]\n")
         print(f"[#C39BD3]Valitse toimitustapa![/#C39BD3]")
-        print(f"[#C39BD3]•[/#C39BD3] [[yellow]1[/yellow]]: Rahtikone ({default_flight_time * format.transport_speed3:.1f} tuntia)")
-        print(f"[#C39BD3]•[/#C39BD3] [[yellow]2[/yellow]]: Matkustajakone ({default_flight_time:.1f} tuntia")
-        print(f"[#C39BD3]•[/#C39BD3] [[yellow]3[/yellow]]: Yksityiskone ({default_flight_time * format.transport_speed2:.1f} tuntia)")
+        print(f"[#C39BD3]•[/#C39BD3] [[yellow]1[/yellow]]: [bright_yellow]Rahtikone:[/bright_yellow]      Lentoaika: [bright_blue]{default_flight_time * format.transport_speed3:.1f}[/bright_blue] tuntia [bright_red](-{default_flight_time * format.transport_speed3:.1f} sekunttia peliaikaa)[/bright_red]")
+        print(f"[#C39BD3]•[/#C39BD3] [[yellow]2[/yellow]]: [bright_yellow]Matkustajakone:[/bright_yellow] Lentoaika: [bright_blue]{default_flight_time:.1f}[/bright_blue] tuntia [bright_red](-{default_flight_time:.1f} sekunttia peliaikaa)[/bright_red]")
+        print(f"[#C39BD3]•[/#C39BD3] [[yellow]3[/yellow]]: [bright_yellow]Yksityiskone:[/bright_yellow]   Lentoaika: [bright_blue]{default_flight_time * format.transport_speed2:.1f}[/bright_blue] tuntia [bright_red](-{default_flight_time * format.transport_speed2:.1f} sekunttia peliaikaa)[/bright_red]")
         option = input(">> ")
 
         if option in ["1","2","3"]:
@@ -85,16 +111,25 @@ def select_delivery_method(chosen_location, player_data, start_time):
     match option:
         case "1":
             CO2_multiplier = format.transport1_co2
+            time_lost = default_flight_time * format.transport_speed3
         case "2":
             CO2_multiplier = format.transport2_co2
+            time_lost = default_flight_time
         case "3":
             CO2_multiplier = format.transport3_co2
+            time_lost = default_flight_time * format.transport_speed2
 
-    delivery_CO2 = float(str(distance_from_player)[:-3]) * 0.36 * CO2_multiplier
+    total_weight = 0
+    for parcel in player_data["parcels_picked"]:
+        if parcel not in player_data["parcels_delivered"]:
+            total_weight += parcel["heft"]
+            total_weight += player_data["parcels_picked"][chosen_location]["heft"]
+
+    delivery_CO2 = float(str(distance_from_player)[:-3]) * 0.36 * total_weight * CO2_multiplier
     parcel_CO2 = player_data["parcels_picked"][chosen_location].get("co2_item")
     CO2_full = delivery_CO2 + parcel_CO2
 
-    return CO2_full
+    return CO2_full, time_lost
 
 
 def is_there_time_left(start_time, time_limit):
@@ -105,27 +140,11 @@ def is_there_time_left(start_time, time_limit):
 
 def how_much_time_is_left(start_time, time_limit):
     #Returns the remaining time represented as a boxes -> string
-    number_of_boxes = int(40 * (time_limit - (time.time() - start_time)) / time_limit) * "█"
-    if len(number_of_boxes) > 25:
-        return f"[#40ff19]{number_of_boxes}[/#40ff19]"
-    elif len(number_of_boxes) > 10:
-        return f"[#ffec17]{number_of_boxes}[/#ffec17]"
+    number_of_boxes = int(20 * (time_limit - (time.time() - start_time)) / time_limit) * "█"
+    time_left = float(f"{time_limit - (time.time() - start_time):.2f}")
+    if int(len(number_of_boxes*2)) > 25:
+        return f"[#40ff19]{number_of_boxes}[/#40ff19] [bold blue]{time_left}s[/bold blue] [#40ff19]{number_of_boxes}[/#40ff19]"
+    elif len(number_of_boxes*2) > 10:
+        return f"[#ffec17]{number_of_boxes}[/#ffec17] [bold blue]{time_left}s[/bold blue] [#ffec17]{number_of_boxes}[/#ffec17]"
     else:
-        return f"[#ff1717]{number_of_boxes}[/#ff1717]"
-
-## TEST DATA
-#test_player_data = {"playername": "abc", "co2_produced": 0, "location": (60.3172, 24.963301), "parcels_picked": [{'item': 'vasara', 'co2_item': 200, 'heft': 8.19, 'info': 'Vasara on hieno vasara', 'destination_airport': 'Aavahelukka Airport', 'destination_country': 'Suomi', 'latitude': 67.60359954833984, 'longitude': 23.97170066833496},
-# {'item': 'omena', 'co2_item': 300, 'heft': 0.35, 'info': 'Omena on hieno omena', 'destination_airport': 'Ahmosuo Airport', 'destination_country': 'Suomi', 'latitude': 64.895302, 'longitude': 25.752199},
-# {'item': 'tietokone', 'co2_item': 150, 'heft': 2.7, 'info': 'tietoinen kone', 'destination_airport': 'Alavus Airfield', 'destination_country': 'Suomi', 'latitude': 62.554699, 'longitude': 23.573299},
-# {'item': 'possu', 'co2_item': 175, 'heft': 0.76, 'info': 'röh röh', 'destination_airport': 'Jorvin Hospital Heliport', 'destination_country': 'Suomi', 'latitude': 60.220833, 'longitude': 24.68639},
-# {'item': 'kaakao', 'co2_item': 500, 'heft': 2.78, 'info': 'makeaa', 'destination_airport': 'Kilpisjärvi Heliport', 'destination_country': 'Suomi', 'latitude': 69.0022201538086, 'longitude': 20.89638900756836},
-#], "parcels_delivered": [{'item': 'vasara', 'co2_item': 200, 'heft': 8.19, 'info': 'Vasara on hieno vasara', 'destination_airport': 'Aavahelukka Airport', 'destination_country': 'Suomi', 'latitude': 67.60359954833984, 'longitude': 23.97170066833496},
-# {'item': 'omena', 'co2_item': 300, 'heft': 0.35, 'info': 'Omena on hieno omena', 'destination_airport': 'Ahmosuo Airport', 'destination_country': 'Suomi', 'latitude': 64.895302, 'longitude': 25.752199},
-# {'item': 'kaakao', 'co2_item': 500, 'heft': 2.78, 'info': 'makeaa', 'destination_airport': 'Kilpisjärvi Heliport', 'destination_country': 'Suomi', 'latitude': 69.0022201538086, 'longitude': 20.89638900756836},
-#] }
-#test_player_data = {"playername": "abc", "co2_produced": 0, "location": (60.3172, 24.963301), "parcels_picked": [{'item': 'vasara', 'co2_item': 200, 'heft': 8.19, 'info': 'Vasara on hieno vasara', 'destination_airport': 'Aavahelukka Airport', 'destination_country': 'Suomi', 'latitude': 67.60359954833984, 'longitude': 23.97170066833496},
-# {'item': 'omena', 'co2_item': 300, 'heft': 0.35, 'info': 'Omena on hieno omena', 'destination_airport': 'Ahmosuo Airport', 'destination_country': 'Suomi', 'latitude': 64.895302, 'longitude': 25.752199},
-# {'item': 'tietokone', 'co2_item': 150, 'heft': 2.7, 'info': 'tietoinen kone', 'destination_airport': 'Alavus Airfield', 'destination_country': 'Suomi', 'latitude': 62.554699, 'longitude': 23.573299},
-# {'item': 'possu', 'co2_item': 175, 'heft': 0.76, 'info': 'röh röh', 'destination_airport': 'Jorvin Hospital Heliport', 'destination_country': 'Suomi', 'latitude': 60.220833, 'longitude': 24.68639},
-# {'item': 'kaakao', 'co2_item': 500, 'heft': 2.78, 'info': 'makeaa', 'destination_airport': 'Kilpisjärvi Heliport', 'destination_country': 'Suomi', 'latitude': 69.0022201538086, 'longitude': 20.89638900756836},
-#], "parcels_delivered": [] }
+        return f"[#ff1717]{number_of_boxes}[/#ff1717] [blink2 bold red]{time_left}s[/blink2 bold red] [#ff1717]{number_of_boxes}[/#ff1717]"
