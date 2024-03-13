@@ -133,7 +133,7 @@ def insert_new_player_scores_in_to_db(players: list[dict]) -> None | KeyError | 
         current_game_id = last_game_id + 1  # If the last game_id fetch was successful then add +1 to it
         for player in players:
             sql = (f"INSERT INTO highscore (game_id, player_name, player_highscore) "
-                   f"VALUES ({current_game_id}, '{player['playername']}', {player['score']})")
+                   f"VALUES ({current_game_id}, '{player['name']}', {player['score']})")
 
             cursor.execute(sql)
 
