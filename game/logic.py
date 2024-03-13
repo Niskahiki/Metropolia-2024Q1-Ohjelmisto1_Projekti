@@ -102,40 +102,49 @@ def game_loop(player_list):
 # Startup sequence
 def intro():
     screen.clear()
-
-    intro_line1 = "                                                                                                                                                                   __  _                                                                                                                                  "
-    intro_line2 = "                                                                                                                                                                   \ `/ |                                                                                                                                 "
-    intro_line3 = "                                                                                                                                                                    \__`!                                                                                                                                 "
-    intro_line4 = "██████╗  █████╗ ██╗  ██╗███████╗████████╗████████╗██╗██████╗ ██╗██╗      ██████╗ ████████╗████████╗██╗                                                              / ,' `-.__________________                                                                                                            "
-    intro_line5 = "██╔══██╗██╔══██╗██║ ██╔╝██╔════╝╚══██╔══╝╚══██╔══╝██║██╔══██╗██║██║     ██╔═══██╗╚══██╔══╝╚══██╔══╝██║_____________________________________________________________'-'\_____                LI`-.                                                                                                         "
-    intro_line6 = "██████╔╝███████║█████╔╝ █████╗     ██║      ██║   ██║██████╔╝██║██║     ██║   ██║   ██║      ██║   ██║                                                                <____()-=O=O=O=O=O=[]====--)                                                                                                        "
-    intro_line7 = "██╔═══╝ ██╔══██║██╔═██╗ ██╔══╝     ██║      ██║   ██║██╔═══╝ ██║██║     ██║   ██║   ██║      ██║   ██║__________________________________________________________________`.___ ,-----,_______...-'                                                                                                         "
-    intro_line8 = "██║     ██║  ██║██║  ██╗███████╗   ██║      ██║   ██║██║     ██║███████╗╚██████╔╝   ██║      ██║   ██║                                                                       /    .'                                                                                                                      "
-    intro_line9 = "╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝      ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝ ╚═════╝    ╚═╝      ╚═╝   ╚═╝                                                                      /   .'                                                                                                                        "
-    intro_line10 ="                                                                                                                                                                           /  .'                                                                                                                          "
-    intro_line11 ="                                                                                                                                                                           `-'                                                                                                                            "
-    list_of_intro_lines = [intro_line1, intro_line2, intro_line3, intro_line4, intro_line5, intro_line6, intro_line7,
-                           intro_line8, intro_line9, intro_line10, intro_line11]
-
-    i = 0
-    for frame in range(len(intro_line6)-102):
+    print(f"[yellow]Haluatko katsoa intron ([/yellow][bright_green]K[/bright_green][yellow]/[/yellow][bright_red]E[/bright_red][yellow])?[/yellow] [blink italic red](Saattaa sisältää välkkyviä valoja)[/blink italic red]")
+    user_input = input(">> ")
+    while user_input.lower() not in ["k","e"]:
         screen.clear()
-        for row in list_of_intro_lines:
-            print(f"[#fffefe]{row[-103-i:-1-i]}[/#fffefe]")
-        time.sleep(0.05)
-        i += 1
-    time.sleep(1)
+        print(f"[ Virheellinen syöte: [red]\"{user_input}\"[/red] ! ]")
+        print(f"[yellow]Haluatko katsoa intron ([/yellow][bright_green]K[/bright_green][yellow]/[/yellow][bright_red]E[/bright_red][yellow])?[/yellow] [blink italic red](Saattaa sisältää välkkyviä valoja)[/blink italic red]")
+        user_input = input(">> ")
 
-    start_colors = ["#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe"]
-    end_colors = ["#ff355e","#fd5b78","#ff6037","#ff9966","#ff9933","#ffcc33","#ffff66","#ccff00","#66ff66","#aaf0d1","#50bfe6","#ff6eff","#ee34d2","#ff00cc","#ff00cc"]
-    for frame in range(len(range(15))):
-        screen.clear()
-        for row in list_of_intro_lines:
-            print(f"[{start_colors[0]}]{row[0:8]}[/{start_colors[0]}][{start_colors[1]}]{row[8:16]}[/{start_colors[1]}][{start_colors[2]}]{row[16:24]}[/{start_colors[2]}][{start_colors[3]}]{row[24:32]}[/{start_colors[3]}][{start_colors[4]}]{row[32:41]}[/{start_colors[4]}][{start_colors[5]}]{row[41:50]}[/{start_colors[5]}][{start_colors[6]}]{row[50:53]}[/{start_colors[6]}][{start_colors[7]}]{row[53:61]}[/{start_colors[7]}][{start_colors[8]}]{row[61:64]}[/{start_colors[8]}][{start_colors[9]}]{row[64:72]}[/{start_colors[9]}][{start_colors[10]}]{row[72:81]}[/{start_colors[10]}][{start_colors[11]}]{row[81:90]}[/{start_colors[11]}][{start_colors[12]}]{row[90:99]}[/{start_colors[12]}][{start_colors[13]}]{row[99:102]}[/{start_colors[13]}]")
-        start_colors[frame] = end_colors[frame]
-        time.sleep(0.4)
+    if user_input == "k":
 
-    time.sleep(3)
+        intro_line1 = "                                                                                                                                                                   __  _                                                                                                                                  "
+        intro_line2 = "                                                                                                                                                                   \ `/ |                                                                                                                                 "
+        intro_line3 = "                                                                                                                                                                    \__`!                                                                                                                                 "
+        intro_line4 = "██████╗  █████╗ ██╗  ██╗███████╗████████╗████████╗██╗██████╗ ██╗██╗      ██████╗ ████████╗████████╗██╗                                                              / ,' `-.__________________                                                                                                            "
+        intro_line5 = "██╔══██╗██╔══██╗██║ ██╔╝██╔════╝╚══██╔══╝╚══██╔══╝██║██╔══██╗██║██║     ██╔═══██╗╚══██╔══╝╚══██╔══╝██║_____________________________________________________________'-'\_____                LI`-.                                                                                                         "
+        intro_line6 = "██████╔╝███████║█████╔╝ █████╗     ██║      ██║   ██║██████╔╝██║██║     ██║   ██║   ██║      ██║   ██║                                                                <____()-=O=O=O=O=O=[]====--)                                                                                                        "
+        intro_line7 = "██╔═══╝ ██╔══██║██╔═██╗ ██╔══╝     ██║      ██║   ██║██╔═══╝ ██║██║     ██║   ██║   ██║      ██║   ██║__________________________________________________________________`.___ ,-----,_______...-'                                                                                                         "
+        intro_line8 = "██║     ██║  ██║██║  ██╗███████╗   ██║      ██║   ██║██║     ██║███████╗╚██████╔╝   ██║      ██║   ██║                                                                       /    .'                                                                                                                      "
+        intro_line9 = "╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝      ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝ ╚═════╝    ╚═╝      ╚═╝   ╚═╝                                                                      /   .'                                                                                                                        "
+        intro_line10 ="                                                                                                                                                                           /  .'                                                                                                                          "
+        intro_line11 ="                                                                                                                                                                           `-'                                                                                                                            "
+        list_of_intro_lines = [intro_line1, intro_line2, intro_line3, intro_line4, intro_line5, intro_line6, intro_line7,
+                               intro_line8, intro_line9, intro_line10, intro_line11]
+
+        i = 0
+        for frame in range(len(intro_line6)-102):
+            screen.clear()
+            for row in list_of_intro_lines:
+                print(f"[#fffefe]{row[-103-i:-1-i]}[/#fffefe]")
+            time.sleep(0.05)
+            i += 1
+        time.sleep(1)
+
+        start_colors = ["#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe","#fffefe"]
+        end_colors = ["#ff355e","#fd5b78","#ff6037","#ff9966","#ff9933","#ffcc33","#ffff66","#ccff00","#66ff66","#aaf0d1","#50bfe6","#ff6eff","#ee34d2","#ff00cc","#ff00cc"]
+        for frame in range(len(range(15))):
+            screen.clear()
+            for row in list_of_intro_lines:
+                print(f"[{start_colors[0]}]{row[0:8]}[/{start_colors[0]}][{start_colors[1]}]{row[8:16]}[/{start_colors[1]}][{start_colors[2]}]{row[16:24]}[/{start_colors[2]}][{start_colors[3]}]{row[24:32]}[/{start_colors[3]}][{start_colors[4]}]{row[32:41]}[/{start_colors[4]}][{start_colors[5]}]{row[41:50]}[/{start_colors[5]}][{start_colors[6]}]{row[50:53]}[/{start_colors[6]}][{start_colors[7]}]{row[53:61]}[/{start_colors[7]}][{start_colors[8]}]{row[61:64]}[/{start_colors[8]}][{start_colors[9]}]{row[64:72]}[/{start_colors[9]}][{start_colors[10]}]{row[72:81]}[/{start_colors[10]}][{start_colors[11]}]{row[81:90]}[/{start_colors[11]}][{start_colors[12]}]{row[90:99]}[/{start_colors[12]}][{start_colors[13]}]{row[99:102]}[/{start_colors[13]}]")
+            start_colors[frame] = end_colors[frame]
+            time.sleep(0.4)
+
+        time.sleep(3)
 
 
 # Exit sequence
