@@ -50,7 +50,7 @@ def select_delivery(player_data):
             if parcel not in player_data.get("parcels_delivered"):
                 print(f"{dot_and_number} {tuote:<{longest_name_length+39}} {paino:<42} {kohde:<{longest_destination_name_length+37}} {etaisuus}")
             else:
-                print(f"• [strike bright_black][{parcel_number}]: Tuote: { parcel.get('item') + ',' :<{longest_name_length + 1} } Paino: { str(parcel.get('heft')) + ' kg,' :<8 } Kohde: { parcel.get('destination_airport') }")
+                print(f"• [strike bright_black][{parcel_number}]: Tuote: { parcel.get('item') + ',' :<{longest_name_length + 1}} Paino: { str(parcel.get('heft')) + ' kg,' :<8} Kohde: { parcel.get('destination_airport') }")
 
         option = input(">> ")
 
